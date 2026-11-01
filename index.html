@@ -91,6 +91,11 @@ footer{color:var(--muted);font-size:.78rem;margin-top:20px}
 .rate{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:12px}
 .rate button{border:1px solid var(--line);background:transparent;border-radius:10px;padding:8px 4px;font-size:.78rem;cursor:pointer;color:var(--muted)}
 .rate button.on{background:var(--wine);border-color:var(--wine);color:var(--on-wine);font-weight:700}
+.fold>summary{list-style:none;cursor:pointer;color:var(--text);font-weight:400}
+.fold>summary::-webkit-details-marker{display:none}
+.fold .open-hint{display:block;margin-top:8px;color:var(--accent);font-weight:650;font-size:.86rem}
+.fold .open-hint::before{content:"▸ "}
+.fold[open] .open-hint{display:none}
 /* table mode */
 .person{border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:10px}
 .people{display:grid;gap:10px}
@@ -149,13 +154,15 @@ nav.tabs button.on{color:var(--accent);font-weight:750}
     <h2>What tastes good?</h2>
     <div class="slider-stack" id="mainSliders"></div>
     <div id="myTasteNudge"></div>
-    <label class="field" for="kind">Wine style</label>
-    <select id="kind"><option value="any">Open to anything</option><option value="red">Red</option><option value="white">White</option><option value="rose">Rosé</option><option value="sparkling">Sparkling</option><option value="sweet">Dessert / sweet</option></select>
-    <label class="field" for="food">Food</label>
-    <select id="food"></select>
-    <details class="geek-panel" id="geekPanel"><summary>Wine Geek mode</summary><div class="slider-stack" id="geekSliders"></div></details>
+    <details class="geek-panel" id="geekPanel"><summary>Wine Geek mode <span class="meta small" id="extrasNote"></span></summary>
+      <label class="field" for="kind" style="margin-top:0">Wine style</label>
+      <select id="kind"><option value="any">Open to anything</option><option value="red">Red</option><option value="white">White</option><option value="rose">Rosé</option><option value="sparkling">Sparkling</option><option value="sweet">Dessert / sweet</option></select>
+      <label class="field" for="food">Food</label>
+      <select id="food"></select>
+      <div class="slider-stack" id="geekSliders"></div>
+    </details>
   </section>
-  <div class="results-head"><div><h2>Your discoveries</h2><div class="meta">A safe bet, a smart swap and something adventurous.</div></div><button class="btn inline" id="shareBtn" type="button">Share</button></div>
+  <div class="results-head"><div><h2>Your discoveries</h2><div class="meta">Your best match first. Tap the others to open them.</div></div><button class="btn inline" id="shareBtn" type="button">Share</button></div>
   <div id="results"></div>
   <section class="card"><h2>🎲 Surprise me</h2><p>A less familiar Australian wine that still suits your palate.</p><button class="btn" id="surpriseBtn" type="button">Find something different</button><div id="surprise"></div></section>
 </div>
@@ -477,6 +484,8 @@ function syncControls(){
     input.parentElement.querySelectorAll('[data-step]').forEach((b,i)=>{b.classList.toggle('selected',i===state.steps[s.id]);b.setAttribute('aria-pressed',String(i===state.steps[s.id]))});
   }
   $('kind').value=state.kind;$('food').value=state.food;$('geekPanel').open=state.geek;
+  const extras=[state.kind!=='any'?KIND[state.kind]:'',state.food!=='none'?FOOD_SHORT[state.food]:''].filter(Boolean);
+  $('extrasNote').textContent=extras.length?'· '+extras.join(' · '):'· style, food & more';
   $('occasions').innerHTML=Object.entries(OCC).map(([k,o])=>`<button class="choice ${state.occasion===k?'active':''}" data-occasion="${k}" type="button" aria-pressed="${state.occasion===k}">${o.label}</button>`).join('');
 }
 let lastPicks=[],surpriseIndex=0,surpriseOn=false;
@@ -485,15 +494,16 @@ function ranked(){
   const p=prefsFrom(state.steps),o=findOpts();
   return wines.filter(w=>state.kind==='any'||w.kind===state.kind).map(w=>({w,...fit(w,p,o)})).sort((a,b)=>b.score-a.score);
 }
-function wineCard(x,title,p,marks){
+function wineCard(x,title,p,marks,folded){
   const w=x.w,why=[...x.why,...traitWords(w,x.target)].slice(0,3);
-  return `<article class="card result"><div class="topline"><div class="tag">${title}</div><div class="match ${matchClass(x.score)}">${x.score}% match</div></div>
-  <h3>${esc(w.name)}</h3><div class="meta">${dot(w.kind)}${esc(w.region)} · ${esc(w.grape)}</div>
-  ${why.length?`<div class="why">${why.map(s=>`<span>${esc(s)}</span>`).join('')}</div>`:''}
+  const head=`<div class="topline"><div class="tag">${title}</div><div class="match ${matchClass(x.score)}">${x.score}% match</div></div>
+  <h3>${esc(w.name)}</h3><div class="meta">${dot(w.kind)}${esc(w.region)} · ${esc(w.grape)}</div>`;
+  const body=`${why.length?`<div class="why">${why.map(s=>`<span>${esc(s)}</span>`).join('')}</div>`:''}
   <p>${esc(w.about)}</p><p class="meta">${esc(w.notes)}</p>
   ${bars(w,x.target,marks)}
   <details><summary>More about this wine</summary><p><b>If you like this, try:</b> ${esc(w.related)}</p><p class="meta">Goes well with: ${w.foods.map(f=>FOOD_SHORT[f]).join(', ')}</p></details>
-  ${rateRow(w.name)}</article>`;
+  ${rateRow(w.name)}`;
+  return folded?`<details class="card result fold"><summary>${head}<span class="open-hint">Tap to see more</span></summary>${body}</details>`:`<article class="card result">${head}${body}</article>`;
 }
 function renderFind(){
   const r=ranked(),aus=r.filter(x=>x.w.origin==='Australia'),intl=r.filter(x=>x.w.origin==='International');
@@ -504,7 +514,7 @@ function renderFind(){
     const avail=aus.filter(x=>!used.includes(x));
     const x=avail.find(y=>y.w.tier===tier&&!grapeUsed(y))||avail.find(y=>y.w.tier===tier)||avail.find(y=>!grapeUsed(y))||avail[0];
     if(!x)continue;used.push(x);lastPicks.push([title.replace(/^\S+ /,''),x.w]);
-    html+=wineCard(x,title+' · 🇦🇺',x.target,marks);
+    html+=wineCard(x,title+' · 🇦🇺',x.target,marks,tier>0);
   }
   if(!used.length)html=`<p class="empty">No Australian wines match that style yet. Try “Open to anything”.</p>`;
   const picks=[];
@@ -661,8 +671,8 @@ document.addEventListener('click',e=>{
   else if(el.id==='confirmClear'){store.ratings={};save();renderMine();renderNudge();$('clearConfirm').innerHTML='';toast('List cleared')}
   else if(el.id==='cancelClear')$('clearConfirm').innerHTML='';
 });
-$('kind').addEventListener('change',e=>{state.kind=e.target.value;update()});
-$('food').addEventListener('change',e=>{state.food=e.target.value;update()});
+$('kind').addEventListener('change',e=>{state.kind=e.target.value;syncControls();update()});
+$('food').addEventListener('change',e=>{state.food=e.target.value;syncControls();update()});
 $('geekPanel').addEventListener('toggle',e=>{if(state.geek!==e.target.open){state.geek=e.target.open;update()}});
 $('surpriseBtn').addEventListener('click',()=>{if(surpriseOn)surpriseIndex++;surpriseOn=true;renderFind()});
 $('shareBtn').addEventListener('click',()=>shareText('My wine picks',`My wine picks 🍷\n${lastPicks.map(([t,w])=>`${t}: ${w.name}`).join('\n')}\nOpen the link to see them with my settings:`,pageUrl()+hashFor()));

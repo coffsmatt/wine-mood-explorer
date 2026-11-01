@@ -1,6 +1,6 @@
 // Wine Mood Explorer offline support.
 // Bump CACHE when you upload a new version so phones pick it up.
-const CACHE = 'wine-mood-explorer-v3';
+const CACHE = 'wine-mood-explorer-v3-1';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-180.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
