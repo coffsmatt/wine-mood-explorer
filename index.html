@@ -1,4 +1,221 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#592b3c"><meta name="apple-mobile-web-app-capable" content="yes"><title>Wine Mood Explorer</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><style>:root{font-family:system-ui,-apple-system,sans-serif;color:#30262a;background:#faf6f2}*{box-sizing:border-box}body{margin:0}main{max-width:680px;margin:auto;padding:20px 16px 60px}header{background:#592b3c;color:white;padding:28px 20px;border-radius:0 0 24px 24px}header h1{margin:0;font-size:1.8rem}header p{margin:8px 0 0;color:#f2dce3}.card{background:white;border:1px solid #e7d9d8;border-radius:18px;padding:18px;margin-top:16px;box-shadow:0 2px 10px #4b25300b}h2{font-size:1.16rem;margin:0 0 15px}h3{margin:6px 0}p{line-height:1.5}label{display:block;font-weight:650;margin:14px 0 5px}.ends{display:flex;justify-content:space-between;color:#75666b;font-size:.78rem}input[type=range]{width:100%;accent-color:#753b50}.choices{display:flex;flex-wrap:wrap;gap:8px}.choice{border:1px solid #d8c5c9;background:white;color:#3d2931;border-radius:100px;padding:10px 13px;font:inherit}.choice.active{background:#592b3c;color:white;border-color:#592b3c}select{width:100%;font:inherit;padding:12px;border-radius:10px;border:1px solid #d8c5c9;background:#fff;color:#30262a;color-scheme:light}select option{background:#fff;color:#30262a}select:focus-visible{outline:3px solid #98536d;outline-offset:2px}@media(prefers-color-scheme:dark){select{background:#29242a;color:#fff;border-color:#a78c97;color-scheme:dark}select option{background:#29242a;color:#fff}}.result{border-left:5px solid #854e61}.tag{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;font-weight:750;color:#854e61}.meta{color:#796b6e;font-size:.9rem}.btn{background:#592b3c;color:white;border:0;border-radius:12px;padding:13px 16px;font:inherit;font-weight:650;width:100%;margin-top:10px}details{margin-top:10px}summary{color:#592b3c;font-weight:650;cursor:pointer}footer{color:#796b6e;font-size:.78rem;margin-top:20px}.slider-stack{display:grid;gap:13px;margin:12px 0 16px}.slider-row{display:grid;grid-template-columns:94px minmax(0,1fr);gap:10px;align-items:center}.slider-name{font-size:.9rem;font-weight:650;display:flex;align-items:center;gap:4px}.slider-track{min-width:0}.slider-track input[type=range]{display:block;margin:0;width:100%;height:24px;cursor:pointer}.slider-labels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;margin-top:0}.slider-labels button{border:0;background:transparent;padding:2px 0;font-size:.68rem;color:#77666d;cursor:pointer;min-height:24px}.slider-labels button:first-child{text-align:left}.slider-labels button:nth-child(2){text-align:center}.slider-labels button:last-child{text-align:right}.slider-labels button.selected{color:#592b3c;font-weight:800}.info-button{border:0;background:none;color:#755b66;cursor:pointer;padding:3px;font-size:.78rem}.slider-help{font-size:.78rem;line-height:1.4;color:#6b5860;margin:2px 0 0 104px}.geek-panel{border-top:1px solid #e7d9d8;padding-top:12px}.geek-panel summary{margin-bottom:12px}@media(max-width:360px){.slider-row{grid-template-columns:78px minmax(0,1fr);gap:7px}.slider-help{margin-left:85px}.slider-name{font-size:.82rem}.slider-labels button{font-size:.63rem}}.catalog-results{max-height:420px;overflow:auto}.catalog-entry{padding:10px 0;border-bottom:1px solid #e8dfe0}.catalog-entry b{font-size:.91rem}#catalogSearch{width:100%;padding:12px;border:1px solid #d8c9cf;border-radius:10px;font:inherit;margin:8px 0}</style></head><body><header><div style="max-width:680px;margin:auto"><h1>🍷 Wine Mood Explorer</h1><p>Find your mood. Discover your next wine.</p></div></header><main><section class="card"><h2>1. What's the occasion?</h2><div class="choices" id="occasions"></div></section><section class="card"><h2>2. What tastes good?</h2><div class="slider-stack" id="mainSliders"></div><label for="kind">Wine style</label><select id="kind"><option value="any">Open to anything</option><option value="red">Red</option><option value="white">White</option><option value="rose">Rosé</option><option value="sparkling">Sparkling</option><option value="sweet">Dessert / sweet</option></select><label for="food">Food</label><select id="food"><option value="none">Just a drink</option><option value="steak">Steak / barbecue</option><option value="chicken">Chicken / roast</option><option value="seafood">Seafood</option><option value="pasta">Pasta / pizza</option><option value="salad">Salad</option><option value="spicy">Spicy food</option><option value="cheese">Cheese</option><option value="dessert">Dessert</option></select><details class="geek-panel" id="geekPanel"><summary>Wine Geek mode</summary><div class="slider-stack" id="geekSliders"></div></details></section><section><h2 style="margin:24px 0 4px">3. Your discoveries</h2><p class="meta">A safe bet, a smart swap and something adventurous.</p><div id="results"></div></section><section class="card"><h2>🍇 Explore the wine catalogue</h2><p class="meta" id="catalogCount"></p><input id="catalogSearch" type="search" placeholder="Search variety, region or country…" aria-label="Search wine catalogue"><div id="catalogResults" class="catalog-results"></div></section><section class="card"><h2>🎲 Surprise Me</h2><p>Try a less familiar wine that suits your palate.</p><button class="btn" id="surpriseBtn">Find something different</button><div id="surprise"></div></section><footer>Wine styles are illustrative, and individual bottles vary. No preferences or history are saved. Enjoy responsibly.</footer></main><script>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wine Mood Explorer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#592b3c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Wine Explorer">
+<meta name="description" content="Find a wine for the moment, pick a bottle the whole table will like, and keep track of what you loved.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+/* Layout: one narrow column of cards, tabbed by a bottom bar like a phone app */
+:root{
+  --wine:#592b3c;--wine-2:#753b50;--accent:#854e61;--accent-soft:#f4e9eb;
+  --bg:#faf6f2;--card:#ffffff;--line:#e7d9d8;--text:#30262a;--muted:#75666b;
+  --good:#2f7a4f;--good-soft:#e3f1e8;--ok:#9a6a12;--ok-soft:#f8eed9;--meh:#a33d4d;--meh-soft:#f7e3e6;
+  --bar:#e9dfe1;--on-wine:#ffffff;--on-wine-muted:#f2dce3;
+  --dot-red:#7a1f35;--dot-white:#e3cf7a;--dot-rose:#ef9fb1;--dot-sparkling:#f1e3a6;--dot-sweet:#c4862a;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --wine:#592b3c;--wine-2:#8c4a63;--accent:#dc9ab1;--accent-soft:#3a2830;
+  --bg:#1a1416;--card:#251d21;--line:#3d2f35;--text:#f3e9ec;--muted:#b9a6ad;
+  --good:#7fcf9c;--good-soft:#1f3328;--ok:#e2b866;--ok-soft:#3a2f1b;--meh:#f08f9e;--meh-soft:#3d2228;
+  --bar:#3a2e33;--on-wine:#ffffff;--on-wine-muted:#f2dce3;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --wine:#592b3c;--wine-2:#8c4a63;--accent:#dc9ab1;--accent-soft:#3a2830;
+  --bg:#1a1416;--card:#251d21;--line:#3d2f35;--text:#f3e9ec;--muted:#b9a6ad;
+  --good:#7fcf9c;--good-soft:#1f3328;--ok:#e2b866;--ok-soft:#3a2f1b;--meh:#f08f9e;--meh-soft:#3d2228;
+  --bar:#3a2e33;--on-wine:#ffffff;--on-wine-muted:#f2dce3;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text)}
+.wrap{max-width:680px;margin:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{background:var(--wine);color:var(--on-wine);padding-block:calc(22px + env(safe-area-inset-top,0px)) 22px;border-radius:0 0 24px 24px}
+header h1{margin:0;font-size:1.7rem;text-wrap:balance}
+header p{margin:6px 0 0;color:var(--on-wine-muted)}
+main{padding-block:4px calc(96px + env(safe-area-inset-bottom,0px))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:16px;box-shadow:0 2px 10px #4b25300b}
+h2{font-size:1.14rem;margin:0 0 12px;text-wrap:balance}
+h3{margin:6px 0 2px;font-size:1.08rem}
+p{line-height:1.5;margin:10px 0}
+.meta{color:var(--muted);font-size:.9rem}
+.small{font-size:.8rem}
+label.field{display:block;font-weight:650;margin:14px 0 6px}
+button{font:inherit;color:inherit}
+button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choice{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:100px;padding:9px 13px;cursor:pointer}
+.choice.active{background:var(--wine);color:var(--on-wine);border-color:var(--wine)}
+select,input[type=text],input[type=search]{width:100%;font:inherit;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+.btn{background:var(--wine);color:var(--on-wine);border:0;border-radius:12px;padding:13px 16px;font-weight:650;width:100%;margin-top:10px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
+.btn.inline{width:auto;margin:0;padding:9px 14px;font-size:.9rem}
+details summary{color:var(--accent);font-weight:650;cursor:pointer}
+footer{color:var(--muted);font-size:.78rem;margin-top:20px}
+/* sliders */
+.slider-stack{display:grid;gap:13px;margin:12px 0 16px}
+.slider-row{display:grid;grid-template-columns:94px minmax(0,1fr);gap:10px;align-items:center}
+.slider-name{font-size:.9rem;font-weight:650;display:flex;align-items:center;gap:4px}
+.slider-track input[type=range]{display:block;margin:0;width:100%;height:24px;cursor:pointer;accent-color:var(--wine-2)}
+.slider-labels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
+.slider-labels button{border:0;background:transparent;padding:2px 0;font-size:.7rem;color:var(--muted);cursor:pointer;min-height:24px}
+.slider-labels button:first-child{text-align:left}.slider-labels button:nth-child(2){text-align:center}.slider-labels button:last-child{text-align:right}
+.slider-labels button.selected{color:var(--accent);font-weight:800}
+.info-button{border:0;background:none;color:var(--muted);cursor:pointer;padding:3px;font-size:.8rem}
+.slider-help{font-size:.8rem;line-height:1.4;color:var(--muted);margin:2px 0 0 104px}
+.geek-panel{border-top:1px solid var(--line);padding-top:12px;margin-top:14px}
+@media(max-width:360px){.slider-row{grid-template-columns:78px minmax(0,1fr);gap:7px}.slider-help{margin-left:85px}.slider-name{font-size:.82rem}.slider-labels button{font-size:.64rem}}
+/* results */
+.results-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-top:26px}
+.results-head h2{margin:0 0 2px}
+.result{position:relative}
+.topline{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.tag{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;font-weight:750;color:var(--accent)}
+.match{font-weight:800;font-size:.85rem;padding:4px 9px;border-radius:100px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.m-good{background:var(--good-soft);color:var(--good)}.m-ok{background:var(--ok-soft);color:var(--ok)}.m-meh{background:var(--meh-soft);color:var(--meh)}
+.why{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
+.why span{background:var(--accent-soft);color:var(--accent);border-radius:100px;padding:3px 9px;font-size:.76rem;font-weight:650}
+.dot{display:inline-block;width:.7em;height:.7em;border-radius:50%;margin-right:5px;vertical-align:baseline;border:1px solid #0000001f}
+.dot.red{background:var(--dot-red)}.dot.white{background:var(--dot-white)}.dot.rose{background:var(--dot-rose)}.dot.sparkling{background:var(--dot-sparkling)}.dot.sweet{background:var(--dot-sweet)}
+.bars{display:grid;gap:6px;margin:12px 0 4px}
+.bar-row{display:grid;grid-template-columns:78px minmax(0,1fr);gap:10px;align-items:center;font-size:.78rem;color:var(--muted)}
+.bar{position:relative;height:8px;background:var(--bar);border-radius:8px}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--wine-2);border-radius:8px}
+.bar b{position:absolute;top:-4px;width:3px;height:16px;background:var(--text);border-radius:2px;transform:translateX(-1.5px)}
+.legend{font-size:.72rem;color:var(--muted);margin:2px 0 0}
+.rate{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:12px}
+.rate button{border:1px solid var(--line);background:transparent;border-radius:10px;padding:8px 4px;font-size:.78rem;cursor:pointer;color:var(--muted)}
+.rate button.on{background:var(--wine);border-color:var(--wine);color:var(--on-wine);font-weight:700}
+/* table mode */
+.person{border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:10px}
+.people{display:grid;gap:10px}
+.person-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.person-top input{padding:9px 11px}
+.remove{border:0;background:none;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:4px 8px}
+.seg-row{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px;align-items:center;font-size:.82rem;color:var(--muted)}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:7px 2px;font-size:.78rem;cursor:pointer;color:var(--text)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--wine);color:var(--on-wine);font-weight:700}
+.person select{padding:8px 10px;font-size:.88rem}
+.who{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.who span{border-radius:100px;padding:3px 9px;font-size:.78rem;font-weight:650;font-variant-numeric:tabular-nums}
+.verdict{font-size:.86rem;margin:8px 0 0;color:var(--muted)}
+.pair{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
+/* my wines */
+.list-entry{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.list-entry:last-child{border-bottom:0}
+.list-entry b{font-size:.94rem}
+.empty{color:var(--muted);font-size:.9rem;margin:6px 0}
+.mini{border:1px solid var(--line);background:transparent;border-radius:8px;padding:6px 9px;font-size:.78rem;cursor:pointer;color:var(--muted)}
+.taste-line{font-size:1.05rem;font-weight:700;margin:4px 0}
+/* catalogue */
+.catalog-results{max-height:520px;overflow:auto;margin-top:6px}
+.catalog-entry{padding:10px 0;border-bottom:1px solid var(--line)}
+.catalog-entry summary{color:var(--text);font-weight:650;list-style:none}
+.catalog-entry summary::-webkit-details-marker{display:none}
+.catalog-entry .meta{font-weight:400}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.filters .choice{padding:6px 11px;font-size:.84rem}
+/* quiz */
+.quiz-score{display:flex;gap:14px;font-size:.84rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.options button{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px 8px;cursor:pointer;font-weight:650}
+.options button.right{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.options button.wrong{background:var(--meh-soft);border-color:var(--meh);color:var(--meh)}
+/* nav + toast */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+nav.tabs .inner{max-width:680px;margin:auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+nav.tabs button{border:0;background:none;padding:9px 2px 10px;display:grid;justify-items:center;gap:2px;font-size:.72rem;color:var(--muted);cursor:pointer}
+nav.tabs button span{font-size:1.25rem;line-height:1}
+nav.tabs button.on{color:var(--accent);font-weight:750}
+.toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:100px;font-size:.88rem;z-index:30;max-width:calc(100% - 32px);text-align:center}
+@media (prefers-reduced-motion:no-preference){.result,.panel{animation:rise .25s ease-out}@keyframes rise{from{transform:translateY(6px)}to{transform:none}}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>🍷 Wine Mood Explorer</h1><p>Find your mood. Discover your next wine.</p></div></header>
+<main class="wrap">
+
+<!-- FIND -->
+<div class="panel" id="tab-find">
+  <section class="card"><h2>What's the occasion?</h2><div class="choices" id="occasions"></div></section>
+  <section class="card">
+    <h2>What tastes good?</h2>
+    <div class="slider-stack" id="mainSliders"></div>
+    <div id="myTasteNudge"></div>
+    <label class="field" for="kind">Wine style</label>
+    <select id="kind"><option value="any">Open to anything</option><option value="red">Red</option><option value="white">White</option><option value="rose">Rosé</option><option value="sparkling">Sparkling</option><option value="sweet">Dessert / sweet</option></select>
+    <label class="field" for="food">Food</label>
+    <select id="food"></select>
+    <details class="geek-panel" id="geekPanel"><summary>Wine Geek mode</summary><div class="slider-stack" id="geekSliders"></div></details>
+  </section>
+  <div class="results-head"><div><h2>Your discoveries</h2><div class="meta">A safe bet, a smart swap and something adventurous.</div></div><button class="btn inline" id="shareBtn" type="button">Share</button></div>
+  <div id="results"></div>
+  <section class="card"><h2>🎲 Surprise me</h2><p>A less familiar Australian wine that still suits your palate.</p><button class="btn" id="surpriseBtn" type="button">Find something different</button><div id="surprise"></div></section>
+</div>
+
+<!-- TABLE -->
+<div class="panel" id="tab-table" hidden>
+  <section class="card">
+    <h2>Pick for the table</h2>
+    <p class="meta">Everyone sets their taste in a few taps. The app finds bottles the whole group will enjoy, and flags who's compromising.</p>
+    <div class="people" id="people"></div>
+    <button class="btn ghost" id="addPerson" type="button">+ Add someone</button>
+    <label class="field" for="tableFood">What are you eating?</label>
+    <select id="tableFood"></select>
+  </section>
+  <div id="tableResults"></div>
+</div>
+
+<!-- MY WINES -->
+<div class="panel" id="tab-mine" hidden>
+  <section class="card" id="tasteCard"></section>
+  <section class="card"><h2>👍 Loved</h2><div id="list-love"></div></section>
+  <section class="card"><h2>🔖 Want to try</h2><div id="list-want"></div></section>
+  <section class="card"><h2>👎 Not for me</h2><div id="list-nope"></div></section>
+  <section class="card">
+    <h2>Share or reset</h2>
+    <p class="meta">Your list is saved on this phone only. No account, nothing sent anywhere.</p>
+    <button class="btn" id="shareList" type="button">Share my list with friends</button>
+    <button class="btn ghost" id="clearList" type="button">Clear my list</button>
+    <div id="clearConfirm"></div>
+  </section>
+</div>
+
+<!-- EXPLORE -->
+<div class="panel" id="tab-explore" hidden>
+  <section class="card">
+    <div class="topline"><h2 style="margin:0">🍇 Guess the grape</h2><div class="quiz-score" id="quizScore"></div></div>
+    <p class="meta">A wine-night game. Read the clues, pass the phone around.</p>
+    <div id="quiz"></div>
+  </section>
+  <section class="card">
+    <h2>Explore the wine catalogue</h2>
+    <p class="meta" id="catalogCount"></p>
+    <input id="catalogSearch" type="search" placeholder="Search variety, region or country…" aria-label="Search wine catalogue">
+    <div class="filters" id="catalogFilters"></div>
+    <div id="catalogResults" class="catalog-results"></div>
+  </section>
+</div>
+
+<footer>Wine styles are illustrative, and individual bottles vary by producer and vintage. Enjoy responsibly.</footer>
+</main>
+
+<nav class="tabs" aria-label="Sections"><div class="inner">
+  <button type="button" data-tab="find" class="on"><span>🍷</span>Find</button>
+  <button type="button" data-tab="table"><span>👥</span>For the table</button>
+  <button type="button" data-tab="mine"><span>⭐</span>My wines</button>
+  <button type="button" data-tab="explore"><span>🍇</span>Explore</button>
+</div></nav>
+<div class="toast" id="toast" hidden></div>
+
+<script>
 const wines=[
 ['Adelaide Hills Gewürztraminer','Gewürztraminer','white','Adelaide Hills, SA',2,49,53,18,0,8,78,'Lychee · Rose petal · Ginger · Turkish delight','An aromatic Australian white with exotic fruit, floral spice and a rounded palate; individual wines range from dry to off-dry.','Alsace Gewürztraminer, Riesling, Torrontés',['spicy','cheese']],
 ['Tasmanian Gewürztraminer','Gewürztraminer','white','Tamar Valley, TAS',2,42,73,12,0,0,68,'Rose · Lychee · Citrus · Ginger','A cool-climate Australian expression with perfume, freshness and delicate spice; sweetness varies by producer.','Adelaide Hills Gewürztraminer, Riesling, Pinot Gris',['spicy','seafood']],
@@ -42,7 +259,6 @@ const wines=[
 ["Pyrenees Cabernet Sauvignon", "Cabernet Sauvignon", "red", "Pyrenees, VIC", 1, 84, 72, 2, 82, 55, 70, "Blackcurrant · Mint · Cedar", "Cabernet Sauvignon from Pyrenees, VIC: blackcurrant · mint · cedar. Style varies by producer and vintage.", "Coonawarra Cabernet, Bordeaux", ["steak"]],
 ["Rutherglen Durif", "Durif / Petite Sirah", "red", "Rutherglen, VIC", 2, 97, 48, 3, 94, 65, 95, "Blackberry · Chocolate · Spice", "Durif / Petite Sirah from Rutherglen, VIC: blackberry · chocolate · spice. Style varies by producer and vintage.", "Tannat, Petit Verdot", ["steak"]],
 ["King Valley Pinot Grigio", "Pinot Grigio", "white", "King Valley, VIC", 0, 25, 85, 2, 0, 0, 55, "Pear · Apple · Citrus", "Pinot Grigio from King Valley, VIC: pear · apple · citrus. Style varies by producer and vintage.", "Italian Pinot Grigio, Albariño", ["salad", "seafood"]],
-["King Valley Prosecco", "Glera", "sparkling", "King Valley, VIC", 0, 23, 82, 17, 0, 0, 70, "Pear · Green apple · Bubbles", "Glera from King Valley, VIC: pear · green apple · bubbles. Style varies by producer and vintage.", "Italian Prosecco, Cava", ["salad"]],
 ["Gippsland Pinot Noir", "Pinot Noir", "red", "Gippsland, VIC", 2, 38, 85, 2, 32, 22, 55, "Cherry · Herbs · Earth", "Pinot Noir from Gippsland, VIC: cherry · herbs · earth. Style varies by producer and vintage.", "Mornington Pinot, Burgundy", ["chicken"]],
 ["Geelong Chardonnay", "Chardonnay", "white", "Geelong, VIC", 1, 65, 78, 2, 0, 45, 58, "Citrus · Stone fruit · Toast", "Chardonnay from Geelong, VIC: citrus · stone fruit · toast. Style varies by producer and vintage.", "Mornington Chardonnay, Chablis", ["chicken"]],
 ["Beechworth Chardonnay", "Chardonnay", "white", "Beechworth, VIC", 1, 68, 80, 2, 0, 50, 62, "Peach · Lemon · Flint", "Chardonnay from Beechworth, VIC: peach · lemon · flint. Style varies by producer and vintage.", "Burgundy Chardonnay, Margaret River", ["chicken"]],
@@ -139,34 +355,335 @@ const wines=[
 ["US Napa Valley Cabernet Sauvignon", "Cabernet Sauvignon", "red", "Napa Valley, USA", 0, 94, 60, 2, 85, 70, 93, "Cassis · Vanilla · Dark cherry", "Cabernet Sauvignon from Napa Valley, USA: cassis · vanilla · dark cherry. Style varies by producer and vintage.", "Margaret River Cabernet, Bordeaux", ["steak"]],
 ["US Oregon Pinot Noir", "Pinot Noir", "red", "Willamette Valley, USA", 1, 43, 83, 2, 37, 30, 60, "Cherry · Cranberry · Earth", "Pinot Noir from Willamette Valley, USA: cherry · cranberry · earth. Style varies by producer and vintage.", "Burgundy, Yarra Pinot", ["chicken"]],
 ["US California Zinfandel", "Zinfandel", "red", "Sonoma County, USA", 1, 90, 55, 3, 60, 50, 95, "Blackberry · Jam · Pepper", "Zinfandel from Sonoma County, USA: blackberry · jam · pepper. Style varies by producer and vintage.", "Barossa Shiraz, Primitivo", ["steak"]],
-["Georgian Saperavi", "Saperavi", "red", "Kakheti, Georgia", 2, 93, 78, 2, 96, 20, 78, "Black fruit · Earth · Spice", "Saperavi from Kakheti, Georgia: black fruit · earth · spice. Style varies by producer and vintage.", "Granite Belt Saperavi, Tannat", ["steak"]]
-].map(a=>({name:a[0],grape:a[1],kind:a[2],region:a[3],tier:a[4],body:a[5],fresh:a[6],sweet:a[7],tannin:a[8],oak:a[9],fruit:a[10],notes:a[11],about:a[12],related:a[13],foods:a[14],origin:/(?:, (?:NSW|VIC|QLD|SA|WA|TAS|ACT|NT)(?:\/NSW)?$)|Australian|Australia/i.test(a[3])?"Australia":"International"}));
-const sliderSpecs=[
-{id:'body',title:'Weight',labels:['Light','Balanced','Bold'],values:[20,50,85],selected:2,help:'Light feels delicate; balanced is medium-bodied; bold is full-bodied and powerful.'},
-{id:'fresh',title:'Freshness',labels:['Rich','Balanced','Crisp'],values:[20,50,85],selected:2,help:'Rich feels round and mellow; crisp has lively, mouth-watering acidity.'},
-{id:'sweet',title:'Sweetness',labels:['Dry','Off-dry','Sweet'],values:[2,35,90],selected:0,help:'Dry has little noticeable sweetness; off-dry has a touch; sweet tastes clearly sweet.'},
-{id:'tannin',title:'Tannin',labels:['Soft','Moderate','Grippy'],values:[15,50,90],selected:1,help:'Tannin is the drying, gripping sensation in your mouth, especially in red wine.'},
-{id:'oak',title:'Oak',labels:['Unoaked','Subtle','Toasty'],values:[0,35,85],selected:1,help:'Oak can contribute vanilla, toast, cedar and spice. Unoaked wines emphasise the fruit.'},
-{id:'fruit',title:'Character',labels:['Savoury','Balanced','Fruity'],values:[15,50,90],selected:1,help:'Savoury means herbal, earthy or peppery; fruity emphasises berries, plum or ripe fruit.'}
+["Georgian Saperavi", "Saperavi", "red", "Kakheti, Georgia", 2, 93, 78, 2, 96, 20, 78, "Black fruit · Earth · Spice", "Saperavi from Kakheti, Georgia: black fruit · earth · spice. Style varies by producer and vintage.", "Granite Belt Saperavi, Tannat", ["steak"]],
+["Yarra Valley Pinot Noir Rosé", "Pinot Noir", "rose", "Yarra Valley, VIC", 0, 26, 88, 2, 3, 0, 60, "Strawberry · Watermelon · Citrus", "A pale, dry and delicate rosé with red-fruit perfume and a crisp finish.", "Provence Rosé, Grenache Rosé", ["salad", "seafood"]],
+["Barossa Grenache Rosé", "Grenache", "rose", "Barossa Valley, SA", 1, 38, 78, 4, 5, 0, 78, "Raspberry · Rose petal · Spice", "A riper, fuller rosé with juicy berry fruit; great with barbecue and summer food.", "McLaren Vale Rosé, Spanish Rosado", ["steak", "spicy"]],
+["King Valley Sangiovese Rosé", "Sangiovese", "rose", "King Valley, VIC", 2, 30, 90, 2, 6, 0, 58, "Cherry · Blood orange · Herbs", "A savoury, Italian-style rosé with bright acidity and a herbal edge.", "Italian Rosato, Provence Rosé", ["pasta", "salad"]]
+].map(a=>({name:a[0],grape:a[1],kind:a[2],region:a[3],tier:a[4],body:a[5],fresh:a[6],sweet:a[7],tannin:a[8],oak:a[9],fruit:a[10],notes:a[11],about:a[12],related:a[13],foods:a[14],
+  origin:/(, (NSW|VIC|QLD|SA|WA|TAS|ACT|NT)(\/NSW)?$)|Australia|Tasmania/i.test(a[3])?'Australia':'International'}));
+
+/* ---------- helpers ---------- */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp=(n,a=0,b=100)=>Math.max(a,Math.min(b,n));
+const byName=Object.fromEntries(wines.map(w=>[w.name,w]));
+const KIND={red:'Red',white:'White',rose:'Rosé',sparkling:'Sparkling',sweet:'Dessert / sweet'};
+const FOOD={none:'Just a drink',steak:'Steak / barbecue',chicken:'Chicken / roast',seafood:'Seafood',pasta:'Pasta / pizza',salad:'Salad',spicy:'Spicy food',cheese:'Cheese',dessert:'Dessert'};
+const FOOD_SHORT={steak:'steak',chicken:'chicken',seafood:'seafood',pasta:'pasta',salad:'salad',spicy:'spicy food',cheese:'cheese',dessert:'dessert'};
+const CANON={'Shiraz / Syrah':'Shiraz','Syrah':'Shiraz','Pinot Grigio':'Pinot Gris','Garnacha / Grenache':'Grenache','Durif / Petite Sirah':'Durif','Mourvèdre / Mataro':'Mataro'};
+const canon=g=>CANON[g]||g;
+
+/* Replace the repetitive auto-written blurbs with a plain structural description */
+function describe(w){
+  const body=w.body<35?'light-bodied':w.body<65?'medium-bodied':'full-bodied';
+  const sweet=w.sweet<8?'dry':w.sweet<40?'off-dry':'sweet';
+  const kind=w.kind==='rose'?'rosé':w.kind==='sparkling'?'sparkling wine':w.kind==='sweet'?'dessert wine':w.kind;
+  const bits=[w.fresh>=88?'zesty, mouth-watering acidity':w.fresh>=70?'fresh acidity':'a softer, rounder feel'];
+  if(w.kind==='red')bits.push(w.tannin>=85?'firm, grippy tannins':w.tannin>=55?'medium tannins':'soft tannins');
+  bits.push(w.oak>=55?'noticeable oak':w.oak>=25?'a touch of oak':'little or no oak');
+  return `A ${body}, ${sweet} ${kind} with ${bits.slice(0,-1).join(', ')} and ${bits.at(-1)}. Style varies by producer and vintage.`;
+}
+for(const w of wines)if(/ from .+: .+\. Style varies by producer and vintage\.$/.test(w.about))w.about=describe(w);
+
+/* ---------- saved data (this device only) ---------- */
+const KEY='wine-mood-explorer.v3';
+let store={ratings:{},group:null,quiz:{best:0}};
+try{Object.assign(store,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
+const rating=n=>store.ratings[n]?.r;
+function grapeMood(g){let s=0;for(const[n,v]of Object.entries(store.ratings)){const w=byName[n];if(w&&canon(w.grape)===g)s+=v.r==='love'?1:v.r==='nope'?-1:0}return s}
+
+/* ---------- taste controls ---------- */
+const SPECS=[
+ {id:'body',title:'Weight',labels:['Light','Balanced','Bold'],values:[20,50,85],def:2,help:'Light feels delicate; balanced is medium-bodied; bold is full-bodied and powerful.'},
+ {id:'fresh',title:'Freshness',labels:['Rich','Balanced','Crisp'],values:[20,50,85],def:2,help:'Rich feels round and mellow; crisp has lively, mouth-watering acidity.'},
+ {id:'sweet',title:'Sweetness',labels:['Dry','Off-dry','Sweet'],values:[2,35,90],def:0,help:'Dry has little noticeable sweetness; off-dry has a touch; sweet tastes clearly sweet.'},
+ {id:'tannin',title:'Tannin',labels:['Soft','Moderate','Grippy'],values:[15,50,90],def:1,help:'Tannin is the drying, gripping sensation in your mouth, especially in red wine.'},
+ {id:'oak',title:'Oak',labels:['Unoaked','Subtle','Toasty'],values:[0,35,85],def:1,help:'Oak can contribute vanilla, toast, cedar and spice. Unoaked wines emphasise the fruit.'},
+ {id:'fruit',title:'Character',labels:['Savoury','Balanced','Fruity'],values:[15,50,90],def:1,help:'Savoury means herbal, earthy or peppery; fruity emphasises berries, plum or ripe fruit.'}
 ];
-function makeSliders(){for(const spec of sliderSpecs){const parent=$(spec.id==='body'||spec.id==='fresh'||spec.id==='sweet'?'mainSliders':'geekSliders');const wrap=document.createElement('div');wrap.className='slider-control';wrap.innerHTML=`<div class="slider-row"><div class="slider-name"><span>${spec.title}</span><button class="info-button" type="button" aria-label="Explain ${spec.title}" aria-expanded="false">ⓘ</button></div><div class="slider-track"><input type="range" id="${spec.id}" min="0" max="2" step="1" value="${spec.selected}" aria-label="${spec.title}"><div class="slider-labels">${spec.labels.map((label,i)=>`<button type="button" data-step="${i}" class="${i===spec.selected?'selected':''}">${label}</button>`).join('')}</div></div></div><p class="slider-help" hidden>${spec.help}</p>`;parent.appendChild(wrap);const input=wrap.querySelector('input');const update=()=>{wrap.querySelectorAll('[data-step]').forEach((b,i)=>{b.classList.toggle('selected',i===+input.value);b.setAttribute('aria-pressed',String(i===+input.value))});render()};input.addEventListener('input',update);wrap.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.step;update()}));const info=wrap.querySelector('.info-button'),help=wrap.querySelector('.slider-help');info.addEventListener('click',()=>{help.hidden=!help.hidden;info.setAttribute('aria-expanded',String(!help.hidden))});}}
-const sliderValue=id=>{const spec=sliderSpecs.find(s=>s.id===id);return spec.values[+$(id).value]};
-const occasions=[['relax','🌙 Quiet evening',0,0],['friends','👥 With friends',-8,8],['dinner','🍽️ Dinner',0,8],['celebrate','🥂 Celebrating',-10,12],['adventure','🧭 Adventurous',0,0]];let occasion='relax',surpriseIndex=0;const $=id=>document.getElementById(id);const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function ranked(){const o=occasions.find(x=>x[0]===occasion),kind=$('kind').value,food=$('food').value,geek=$('geekPanel').open;return wines.filter(w=>kind==='any'||w.kind===kind).map(w=>({...w,score:2*Math.abs(w.body-Math.max(0,Math.min(100,sliderValue('body')+o[2])))+2*Math.abs(w.fresh-Math.max(0,Math.min(100,sliderValue('fresh')+o[3])))+2.2*Math.abs(w.sweet-sliderValue('sweet'))+(geek?Math.abs(w.tannin-sliderValue('tannin'))+.7*Math.abs(w.oak-sliderValue('oak'))+.5*Math.abs(w.fruit-sliderValue('fruit')):0)-(w.foods.includes(food)&&food!=='none'?42:0)-(occasion==='celebrate'&&w.kind==='sparkling'?42:0)})).sort((a,b)=>a.score-b.score)}function render(){
-const r=ranked(),australian=r.filter(w=>w.origin==='Australia'),international=r.filter(w=>w.origin==='International'),used=[];
-let html='';
-for(const [tier,title,desc] of [[0,'🛡️ Safe Bet','An Australian classic'],[1,'🔄 Smart Swap','A different Australian expression'],[2,'🧭 Discovery Pick','An emerging or less familiar Australian wine']]){
-const available=australian.filter(w=>!used.includes(w.name));
-const w=available.find(x=>x.tier===tier&&!used.some(n=>australian.find(y=>y.name===n)?.grape===x.grape))||available.find(x=>x.tier===tier)||available.find(x=>!used.some(n=>australian.find(y=>y.name===n)?.grape===x.grape))||available[0];
-if(!w)continue;used.push(w.name);
-html+=`<article class="card result"><div class="tag">${title} · 🇦🇺 Australian</div><h3>${escape(w.name)}</h3><div class="meta">${escape(w.region)} · ${escape(w.grape)}</div><p>${escape(w.about)}</p><p class="meta">${escape(w.notes)}</p><details><summary>Explore this wine</summary><p><b>Related varieties:</b> ${escape(w.related)}</p><p><b>Typical profile:</b> Body ${w.body}/100 · Freshness ${w.fresh}/100 · Tannin ${w.tannin}/100 · Sweetness ${w.sweet}/100</p></details></article>`;
+const SPEC=Object.fromEntries(SPECS.map(s=>[s.id,s]));
+const OCC={
+ relax:{label:'🌙 Quiet evening',body:0,fresh:0,bonus:w=>(w.tier===0?3:0)+(w.fruit>=60&&w.tannin<=70?3:0),why:'Easy-going comfort pick'},
+ friends:{label:'👥 With friends',body:-8,fresh:8,bonus:w=>w.fruit>=65&&w.tannin<=60?7:0,why:'Crowd-pleaser'},
+ dinner:{label:'🍽️ Dinner',body:0,fresh:8,bonus:w=>w.fresh>=75?5:0,why:'Food-friendly freshness'},
+ celebrate:{label:'🥂 Celebrating',body:-10,fresh:12,bonus:w=>w.kind==='sparkling'?16:0,why:'Bubbles for the occasion'},
+ adventure:{label:'🧭 Adventurous',body:0,fresh:0,bonus:w=>w.tier===2?10:w.tier===0?-4:0,why:'Off the beaten track'}
+};
+const state={occasion:'relax',kind:'any',food:'none',steps:Object.fromEntries(SPECS.map(s=>[s.id,s.def])),geek:false,tab:'find'};
+const prefsFrom=steps=>Object.fromEntries(SPECS.map(s=>[s.id,s.values[steps[s.id]??s.def]]));
+
+/* ---------- the matching engine ---------- */
+function fit(w,p,o={}){
+  const oc=OCC[o.occasion]||{body:0,fresh:0};
+  const t={...p,body:clamp(p.body+oc.body),fresh:clamp(p.fresh+oc.fresh)};
+  const parts=[['body',2],['fresh',2],['sweet',2.2]].concat(o.geek?[['tannin',1],['oak',.7],['fruit',.5]]:[]);
+  let num=0,den=0;for(const[k,wt]of parts){num+=wt*Math.abs(w[k]-t[k]);den+=wt}
+  let score=100-1.5*num/den;const why=[];
+  if(o.food&&o.food!=='none'&&w.foods.includes(o.food)){score+=12;why.push('Great with '+FOOD_SHORT[o.food])}
+  if(oc.bonus){const b=oc.bonus(w);score+=b;if(b>0)why.push(oc.why)}
+  if(o.kindPref&&o.kindPref!=='any')score+=w.kind===o.kindPref?8:-15;
+  if(o.personal){
+    const r=rating(w.name);
+    if(r==='love'){score+=4;why.unshift('You loved this')}
+    else if(r==='nope')score-=30;
+    else{const g=grapeMood(canon(w.grape));if(g>0){score+=Math.min(8,4*g);why.push('You like '+canon(w.grape))}else if(g<0)score-=Math.min(14,7*-g)}
+  }
+  if(score>80)score=80+(score-80)*.55; // spread out the top end so 'great' and 'perfect' look different
+  return{score:clamp(Math.round(score),1,99),why,target:t};
 }
-const globalPicks=[];const selected=australian.filter(w=>used.includes(w.name));
-for(const w of international){if(globalPicks.length>=3)break;if(globalPicks.some(x=>x.grape===w.grape))continue;const sameGrape=selected.some(x=>x.grape.toLowerCase()===w.grape.toLowerCase());if(sameGrape)globalPicks.push(w)}
-for(const w of international){if(globalPicks.length>=3)break;if(!globalPicks.some(x=>x.name===w.name)&&!globalPicks.some(x=>x.grape===w.grape))globalPicks.push(w)}
-if(globalPicks.length){html+=`<section class="card result"><div class="tag">🌍 Around the World · Related wines</div><h3>International alternatives</h3><p class="meta">Explore similar styles from other countries. Your three main picks remain Australian.</p>${globalPicks.map(w=>`<details><summary>${escape(w.name)}</summary><div class="meta">${escape(w.region)} · ${escape(w.grape)}</div><p>${escape(w.about)}</p><p class="meta">${escape(w.notes)}</p></details>`).join('')}</section>`}
-$('results').innerHTML=html;
-const discoveries=australian.filter(w=>w.tier===2);
-if($('surprise').dataset.visible==='yes'&&discoveries.length){const w=discoveries[surpriseIndex%discoveries.length];$('surprise').innerHTML=`<h3>${escape(w.name)}</h3><p>${escape(w.about)}</p><div class="meta">🇦🇺 ${escape(w.region)} · ${escape(w.notes)}</div>`}else $('surprise').innerHTML='';
+const matchClass=s=>s>=80?'m-good':s>=60?'m-ok':'m-meh';
+function traitWords(w,t){
+  const out=[];
+  if(Math.abs(w.body-t.body)<=18)out.push(w.body<35?'Light':w.body<65?'Medium body':'Bold');
+  if(Math.abs(w.fresh-t.fresh)<=18)out.push(w.fresh>=70?'Crisp':w.fresh>=45?'Balanced':'Rich');
+  if(Math.abs(w.sweet-t.sweet)<=15)out.push(w.sweet<8?'Dry':w.sweet<40?'Off-dry':'Sweet');
+  return out.length>=2?['Your style: '+out.join(' · ')]:[];
 }
-function renderOccasions(){$('occasions').innerHTML=occasions.map(o=>`<button class="choice ${occasion===o[0]?'active':''}" data-occasion="${o[0]}" type="button">${o[1]}</button>`).join('')}makeSliders();renderOccasions();$('occasions').addEventListener('click',e=>{const b=e.target.closest('[data-occasion]');if(b){occasion=b.dataset.occasion;renderOccasions();render()}});document.querySelectorAll('input,select,details').forEach(e=>{e.addEventListener('input',render);e.addEventListener('toggle',render)});$('surpriseBtn').addEventListener('click',()=>{surpriseIndex++;$('surprise').dataset.visible='yes';render()});function renderCatalogue(){const q=$('catalogSearch').value.trim().toLocaleLowerCase();const found=q?wines.filter(w=>[w.name,w.grape,w.region,w.notes,w.related].join(' ').toLocaleLowerCase().includes(q)):[];$('catalogCount').textContent=`${wines.length} wine styles and regional expressions · Australia and international`;$('catalogResults').innerHTML=q?(found.length?found.slice(0,40).map(w=>`<div class="catalog-entry"><b>${escape(w.name)}</b><div class="meta">${escape(w.region)} · ${escape(w.kind)} · ${escape(w.notes)}</div><div class="meta">Related: ${escape(w.related)}</div></div>`).join(''):'<p class="meta">No matching wines. Try a grape or region.</p>'):'<p class="meta">Try “Tasmania”, “Riesling”, “Italy”, “Granite Belt” or “Assyrtiko”.</p>'} $('catalogSearch').addEventListener('input',renderCatalogue);renderCatalogue();render();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
-</script></body></html>
+
+/* ---------- shared bits of UI ---------- */
+function bars(w,p,marks=[]){
+  const dims=[['body','Body'],['fresh','Freshness'],['sweet','Sweetness']];
+  if(w.kind==='red')dims.push(['tannin','Tannin']);
+  dims.push(['oak','Oak']);
+  return `<div class="bars">${dims.map(([k,l])=>`<div class="bar-row"><span>${l}</span><div class="bar"><i style="width:${clamp(w[k],2,100)}%"></i>${p&&marks.includes(k)?`<b style="left:${clamp(p[k],2,98)}%"></b>`:''}</div></div>`).join('')}</div>${p&&marks.length?'<p class="legend">The dark tick marks what you asked for.</p>':''}`;
+}
+function rateRow(name){
+  const r=rating(name);
+  return `<div class="rate" data-name="${esc(name)}">${[['love','👍','Loved it'],['nope','👎','Not for me'],['want','🔖','Want to try']].map(([k,e,l])=>`<button type="button" class="${r===k?'on':''}" data-rate="${k}" aria-pressed="${r===k}">${e} ${l}</button>`).join('')}</div>`;
+}
+const dot=k=>`<span class="dot ${k}" aria-hidden="true"></span>`;
+let toastTimer;
+function toast(msg){const t=$('toast');t.textContent=msg;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,2200)}
+
+/* ---------- FIND tab ---------- */
+function makeSliders(){
+  for(const spec of SPECS){
+    const parent=$(['body','fresh','sweet'].includes(spec.id)?'mainSliders':'geekSliders');
+    const wrap=document.createElement('div');
+    wrap.innerHTML=`<div class="slider-row"><div class="slider-name"><span>${spec.title}</span><button class="info-button" type="button" aria-label="Explain ${spec.title}" aria-expanded="false">ⓘ</button></div><div class="slider-track"><input type="range" id="${spec.id}" min="0" max="2" step="1" aria-label="${spec.title}"><div class="slider-labels">${spec.labels.map((l,i)=>`<button type="button" data-step="${i}">${l}</button>`).join('')}</div></div></div><p class="slider-help" hidden>${spec.help}</p>`;
+    parent.appendChild(wrap);
+    const input=wrap.querySelector('input');
+    const set=v=>{state.steps[spec.id]=+v;syncControls();update()};
+    input.addEventListener('input',()=>set(input.value));
+    wrap.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>set(b.dataset.step)));
+    const info=wrap.querySelector('.info-button'),help=wrap.querySelector('.slider-help');
+    info.addEventListener('click',()=>{help.hidden=!help.hidden;info.setAttribute('aria-expanded',String(!help.hidden))});
+  }
+}
+function syncControls(){
+  for(const s of SPECS){
+    const input=$(s.id);input.value=state.steps[s.id];
+    input.parentElement.querySelectorAll('[data-step]').forEach((b,i)=>{b.classList.toggle('selected',i===state.steps[s.id]);b.setAttribute('aria-pressed',String(i===state.steps[s.id]))});
+  }
+  $('kind').value=state.kind;$('food').value=state.food;$('geekPanel').open=state.geek;
+  $('occasions').innerHTML=Object.entries(OCC).map(([k,o])=>`<button class="choice ${state.occasion===k?'active':''}" data-occasion="${k}" type="button" aria-pressed="${state.occasion===k}">${o.label}</button>`).join('');
+}
+let lastPicks=[],surpriseIndex=0,surpriseOn=false;
+function findOpts(){return{occasion:state.occasion,food:state.food,geek:state.geek,personal:true}}
+function ranked(){
+  const p=prefsFrom(state.steps),o=findOpts();
+  return wines.filter(w=>state.kind==='any'||w.kind===state.kind).map(w=>({w,...fit(w,p,o)})).sort((a,b)=>b.score-a.score);
+}
+function wineCard(x,title,p,marks){
+  const w=x.w,why=[...x.why,...traitWords(w,x.target)].slice(0,3);
+  return `<article class="card result"><div class="topline"><div class="tag">${title}</div><div class="match ${matchClass(x.score)}">${x.score}% match</div></div>
+  <h3>${esc(w.name)}</h3><div class="meta">${dot(w.kind)}${esc(w.region)} · ${esc(w.grape)}</div>
+  ${why.length?`<div class="why">${why.map(s=>`<span>${esc(s)}</span>`).join('')}</div>`:''}
+  <p>${esc(w.about)}</p><p class="meta">${esc(w.notes)}</p>
+  ${bars(w,x.target,marks)}
+  <details><summary>More about this wine</summary><p><b>If you like this, try:</b> ${esc(w.related)}</p><p class="meta">Goes well with: ${w.foods.map(f=>FOOD_SHORT[f]).join(', ')}</p></details>
+  ${rateRow(w.name)}</article>`;
+}
+function renderFind(){
+  const r=ranked(),aus=r.filter(x=>x.w.origin==='Australia'),intl=r.filter(x=>x.w.origin==='International');
+  const marks=['body','fresh','sweet'].concat(state.geek?['tannin','oak']:[]);
+  const used=[];let html='';lastPicks=[];
+  const grapeUsed=x=>used.some(u=>canon(u.w.grape)===canon(x.w.grape));
+  for(const[tier,title]of[[0,'🛡️ Safe bet'],[1,'🔄 Smart swap'],[2,'🧭 Discovery pick']]){
+    const avail=aus.filter(x=>!used.includes(x));
+    const x=avail.find(y=>y.w.tier===tier&&!grapeUsed(y))||avail.find(y=>y.w.tier===tier)||avail.find(y=>!grapeUsed(y))||avail[0];
+    if(!x)continue;used.push(x);lastPicks.push([title.replace(/^\S+ /,''),x.w]);
+    html+=wineCard(x,title+' · 🇦🇺',x.target,marks);
+  }
+  if(!used.length)html=`<p class="empty">No Australian wines match that style yet. Try “Open to anything”.</p>`;
+  const picks=[];
+  for(const x of intl){if(picks.length>=3)break;if(picks.some(y=>y.w.grape===x.w.grape))continue;if(used.some(u=>canon(u.w.grape)===canon(x.w.grape)))picks.push(x)}
+  for(const x of intl){if(picks.length>=3)break;if(!picks.includes(x)&&!picks.some(y=>y.w.grape===x.w.grape))picks.push(x)}
+  if(picks.length)html+=`<section class="card"><div class="tag">🌍 Around the world</div><h3>International alternatives</h3><p class="meta">Similar styles from other countries.</p>${picks.map(x=>`<details><summary>${esc(x.w.name)} · ${x.score}%</summary><div class="meta">${dot(x.w.kind)}${esc(x.w.region)} · ${esc(x.w.grape)}</div><p>${esc(x.w.about)}</p><p class="meta">${esc(x.w.notes)}</p>${rateRow(x.w.name)}</details>`).join('')}</section>`;
+  $('results').innerHTML=html;
+  const disc=aus.filter(x=>x.w.tier===2).slice(0,8);
+  if(surpriseOn&&disc.length){const x=disc[surpriseIndex%disc.length];$('surprise').innerHTML=`<div style="margin-top:14px">${wineCard(x,'🎲 Surprise',x.target,marks).replace('class="card result"','class="result"')}</div>`}
+  else $('surprise').innerHTML='';
+  renderNudge();
+}
+function renderNudge(){
+  const t=myTaste();
+  if(!t){$('myTasteNudge').innerHTML='';return}
+  const same=['body','fresh','sweet'].every(k=>t.steps[k]===state.steps[k]);
+  $('myTasteNudge').innerHTML=same?`<p class="meta small">✓ Set to your taste, based on ${t.n} wines you loved.</p>`:`<button class="btn ghost inline" id="useTaste" type="button">Use my taste (${esc(t.summary)})</button>`;
+}
+function update(){renderFind();writeHash()}
+
+/* share link keeps the settings in the address */
+function hashFor(){return`#o-${state.occasion}-k-${state.kind}-f-${state.food}-s-${SPECS.map(s=>state.steps[s.id]).join('')}-g-${state.geek?1:0}`}
+function writeHash(){try{history.replaceState(null,'',hashFor())}catch(e){}}
+function readHash(){
+  const m=location.hash.match(/^#o-(\w+)-k-(\w+)-f-(\w+)-s-([0-2]{6})-g-([01])$/);if(!m)return;
+  if(OCC[m[1]])state.occasion=m[1];if(m[2]==='any'||KIND[m[2]])state.kind=m[2];if(FOOD[m[3]])state.food=m[3];
+  SPECS.forEach((s,i)=>state.steps[s.id]=+m[4][i]);state.geek=m[5]==='1';
+}
+async function shareText(title,text,url){
+  try{if(navigator.share){await navigator.share({title,text,url});return}}catch(e){if(e.name==='AbortError')return}
+  const all=text+(url?'\n'+url:'');
+  try{await navigator.clipboard.writeText(all);toast('Copied. Paste it into your group chat.')}
+  catch(e){toast('Couldn’t copy automatically. Long-press to copy the text below.');showCopyBox(all)}
+}
+function showCopyBox(text){const box=document.createElement('textarea');box.value=text;box.rows=5;box.style.cssText='width:100%;margin-top:10px;font:inherit;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)';$('results').prepend(box);box.select()}
+function pageUrl(){return location.href.split('#')[0]}
+
+/* ---------- FOR THE TABLE ---------- */
+if(!store.group||!Array.isArray(store.group.people))store.group={food:'none',people:[{name:'Me',steps:[2,2,0],pref:'any'},{name:'Friend',steps:[1,1,0],pref:'white'},{name:'Friend 2',steps:[2,1,0],pref:'red'}]};
+const SEG=[['body','Weight',['Light','Medium','Bold']],['fresh','Feel',['Rich','Balanced','Crisp']],['sweet','Sweet',['Dry','Off-dry','Sweet']]];
+function renderPeople(){
+  $('people').innerHTML=store.group.people.map((pp,i)=>`<div class="person" data-i="${i}">
+    <div class="person-top"><input type="text" id="pname-${i}" value="${esc(pp.name)}" aria-label="Name" maxlength="24" data-name-i="${i}"><button class="remove" type="button" data-remove="${i}" aria-label="Remove ${esc(pp.name)}" ${store.group.people.length<2?'disabled':''}>×</button></div>
+    ${SEG.map(([k,l,opts],j)=>`<div class="seg-row"><span>${l}</span><div class="seg">${opts.map((o,v)=>`<button type="button" class="${pp.steps[j]===v?'on':''}" data-seg="${i},${j},${v}" aria-pressed="${pp.steps[j]===v}">${o}</button>`).join('')}</div></div>`).join('')}
+    <div class="seg-row"><span>Likes</span><select id="ppref-${i}" data-pref-i="${i}" aria-label="Preferred style">${[['any','Anything'],['red','Reds'],['white','Whites'],['rose','Rosé'],['sparkling','Bubbles'],['sweet','Sweet stuff']].map(([v,l])=>`<option value="${v}" ${pp.pref===v?'selected':''}>${l}</option>`).join('')}</select></div>
+  </div>`).join('');
+  $('addPerson').hidden=store.group.people.length>=8;
+}
+function personPrefs(pp){return prefsFrom({body:pp.steps[0],fresh:pp.steps[1],sweet:pp.steps[2]})}
+function renderTableResults(){
+  const people=store.group.people;
+  if(people.length<2){$('tableResults').innerHTML='<section class="card"><p class="empty">Add at least two people to find a shared bottle.</p></section>';return}
+  const rows=wines.map(w=>{const fits=people.map(pp=>fit(w,personPrefs(pp),{food:store.group.food,kindPref:pp.pref}).score);const avg=fits.reduce((a,b)=>a+b,0)/fits.length,min=Math.min(...fits);return{w,fits,avg,min,score:Math.round(.6*avg+.4*min)}}).sort((a,b)=>b.score-a.score);
+  const top=[];for(const r of rows){if(top.length>=3)break;if(!top.some(t=>canon(t.w.grape)===canon(r.w.grape)))top.push(r)}
+  const chips=fits=>`<div class="who">${people.map((pp,i)=>`<span class="${matchClass(fits[i])}">${esc(pp.name||'Someone')} ${fits[i]}%</span>`).join('')}</div>`;
+  const verdict=r=>{const lowI=r.fits.indexOf(r.min);return r.min>=80?'Everyone should be happy with this one.':r.min>=60?`Good for the group. A bit of a compromise for ${esc(people[lowI].name||'one person')}.`:`Best shared option, but ${esc(people[lowI].name||'one person')} may want something else.`};
+  // two-bottle plan: the pair that gives each person the best of the two
+  const pool=[...rows].sort((a,b)=>b.avg-a.avg).slice(0,40);let best=null;
+  for(let i=0;i<pool.length;i++)for(let j=i+1;j<pool.length;j++){if(pool[i].w.kind===pool[j].w.kind&&canon(pool[i].w.grape)===canon(pool[j].w.grape))continue;const f=people.map((_,k)=>Math.max(pool[i].fits[k],pool[j].fits[k]));const s=f.reduce((a,b)=>a+b,0)/f.length+.4*Math.min(...f);if(!best||s>best.s)best={a:pool[i],b:pool[j],f,s}}
+  const showPair=best&&Math.min(...best.f)>top[0].min+5;
+  $('tableResults').innerHTML=`<div class="results-head"><div><h2>Bottles for the table</h2><div class="meta">Ranked so nobody's left out.</div></div><button class="btn inline" id="shareTable" type="button">Share</button></div>`+
+   top.map((r,n)=>`<article class="card result"><div class="topline"><div class="tag">${['🥇 Best shared bottle','🥈 Runner-up','🥉 Also good'][n]}</div><div class="match ${matchClass(r.score)}">${r.score}% group</div></div>
+   <h3>${esc(r.w.name)}</h3><div class="meta">${dot(r.w.kind)}${esc(r.w.region)} · ${esc(r.w.grape)}</div>${chips(r.fits)}<p class="verdict">${verdict(r)}</p><p class="meta">${esc(r.w.notes)}</p></article>`).join('')+
+   (showPair?`<section class="card"><div class="tag">🍾🍾 Two-bottle plan</div><h3>Or grab two and keep everyone happy</h3><p><b>${esc(best.a.w.name)}</b> + <b>${esc(best.b.w.name)}</b></p>${chips(best.f)}<p class="meta">Each person's score is for whichever of the two suits them better.</p></section>`:'');
+  tableTop=top;tablePair=showPair?best:null;
+}
+let tableTop=[],tablePair=null;
+function renderTable(){renderPeople();renderTableResults()}
+
+/* ---------- MY WINES ---------- */
+function myTaste(){
+  const loved=Object.entries(store.ratings).filter(([n,v])=>v.r==='love'&&byName[n]).map(([n])=>byName[n]);
+  if(loved.length<2)return null;
+  const steps={};for(const s of SPECS){const a=loved.reduce((t,w)=>t+w[s.id],0)/loved.length;steps[s.id]=s.values.reduce((bi,v,i)=>Math.abs(v-a)<Math.abs(s.values[bi]-a)?i:bi,0)}
+  const count=(f)=>{const c={};for(const w of loved){const k=f(w);c[k]=(c[k]||0)+1}return Object.entries(c).sort((a,b)=>b[1]-a[1])};
+  const summary=['body','fresh','sweet'].map(k=>SPEC[k].labels[steps[k]]).join(', ').toLowerCase();
+  return{n:loved.length,steps,summary,grapes:count(w=>canon(w.grape)).slice(0,3).map(x=>x[0]),kinds:count(w=>w.kind)};
+}
+function renderMine(){
+  const t=myTaste(),n=Object.keys(store.ratings).length;
+  $('tasteCard').innerHTML=t?`<h2>Your taste</h2><p class="taste-line">You lean ${esc(t.summary)}.</p><p class="meta">Based on ${t.n} wines you loved. Favourite grapes: ${t.grapes.map(esc).join(', ')}. Mostly ${t.kinds.map(([k,c])=>`${KIND[k].toLowerCase()} (${c})`).join(', ')}.</p><p class="meta">Your picks on the Find tab now lean towards grapes you've loved and away from ones you didn't.</p><button class="btn" id="useTaste2" type="button">Set the Find tab to my taste</button>`
+   :`<h2>Your taste</h2><p class="meta">Tap 👍 <b>Loved it</b>, 👎 <b>Not for me</b> or 🔖 <b>Want to try</b> on any wine. After two loved wines, the app works out your style and tunes its picks to you.</p><p class="meta small">${n?`${n} wine${n>1?'s':''} rated so far.`:''}</p>`;
+  for(const r of['love','want','nope']){
+    const items=Object.entries(store.ratings).filter(([nm,v])=>v.r===r&&byName[nm]).sort((a,b)=>b[1].t-a[1].t);
+    $('list-'+r).innerHTML=items.length?items.map(([nm])=>{const w=byName[nm];return`<div class="list-entry"><div><b>${dot(w.kind)}${esc(w.name)}</b><div class="meta small">${esc(w.region)} · ${esc(w.notes)}</div></div><button class="mini" type="button" data-unrate="${esc(nm)}">Remove</button></div>`}).join(''):`<p class="empty">${{love:'Nothing yet. Find a wine you enjoyed and tap 👍.',want:'Bookmark wines with 🔖 to build a shopping list.',nope:'Wines you didn’t enjoy go here, so the app stops suggesting them.'}[r]}</p>`;
+  }
+}
+function setRating(name,r){
+  if(rating(name)===r)delete store.ratings[name];else store.ratings[name]={r,t:Date.now()};
+  save();
+  document.querySelectorAll('.rate').forEach(row=>{if(row.dataset.name!==name)return;row.querySelectorAll('[data-rate]').forEach(b=>{const on=rating(name)===b.dataset.rate;b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on))})});
+  const now=rating(name);toast(now?{love:'Added to Loved',nope:'Noted. Fewer like this.',want:'Added to Want to try'}[now]:'Removed from My wines');
+  renderMine();renderNudge();
+}
+function applyMyTaste(){const t=myTaste();if(!t)return;Object.assign(state.steps,t.steps);syncControls();update();showTab('find');toast('Set to your taste')}
+
+/* ---------- EXPLORE: guess the grape ---------- */
+const quizPool=wines.filter(w=>(w.kind==='red'||w.kind==='white')&&!/\/|blend|experimental/i.test(canon(w.grape)));
+const quiz={q:null,options:[],answered:false,streak:0,score:0,played:0,hint:false};
+function newQuestion(){
+  const w=quizPool[Math.floor(Math.random()*quizPool.length)];
+  const g=canon(w.grape);
+  const others=[...new Set(quizPool.filter(x=>x.kind===w.kind&&canon(x.grape)!==g).map(x=>canon(x.grape)))].sort(()=>Math.random()-.5).slice(0,3);
+  Object.assign(quiz,{q:w,options:[g,...others].sort(()=>Math.random()-.5),answered:false,hint:false});renderQuiz();
+}
+function renderQuiz(){
+  const w=quiz.q;
+  $('quizScore').innerHTML=`<span>Score ${quiz.score}/${quiz.played}</span><span>Streak ${quiz.streak}</span><span>Best ${store.quiz.best||0}</span>`;
+  $('quiz').innerHTML=`<p><b>${dot(w.kind)}A ${w.kind} wine.</b> Tasting notes: <i>${esc(w.notes)}</i></p>${bars(w)}
+  <p class="meta small">${quiz.hint||quiz.answered?`Region: ${esc(w.region)}`:`<button class="mini" type="button" id="quizHint">Show a region hint</button>`}</p>
+  <div class="options">${quiz.options.map(o=>`<button type="button" data-guess="${esc(o)}" class="${quiz.answered?(o===canon(w.grape)?'right':o===quiz.picked?'wrong':''):''}" ${quiz.answered?'disabled':''}>${esc(o)}</button>`).join('')}</div>
+  ${quiz.answered?`<p>${quiz.picked===canon(w.grape)?'🎉 Correct!':'Not this time.'} It's <b>${esc(w.name)}</b>. ${esc(w.about)}</p><button class="btn" type="button" id="quizNext">Next wine</button>`:''}`;
+}
+function guess(o){
+  if(quiz.answered)return;quiz.answered=true;quiz.picked=o;quiz.played++;
+  if(o===canon(quiz.q.grape)){quiz.score++;quiz.streak++;if(quiz.streak>(store.quiz.best||0)){store.quiz.best=quiz.streak;save()}}else quiz.streak=0;
+  renderQuiz();
+}
+
+/* ---------- EXPLORE: catalogue ---------- */
+const cat={kind:'all',origin:'all'};
+function renderCatalogue(){
+  const q=$('catalogSearch').value.trim().toLocaleLowerCase();
+  $('catalogFilters').innerHTML=[['all','All'],...Object.entries(KIND)].map(([k,l])=>`<button type="button" class="choice ${cat.kind===k?'active':''}" data-catkind="${k}" aria-pressed="${cat.kind===k}">${k==='all'?'':dot(k)}${l}</button>`).join('')+
+    [['all','Everywhere'],['Australia','🇦🇺 Australia'],['International','🌍 Overseas']].map(([k,l])=>`<button type="button" class="choice ${cat.origin===k?'active':''}" data-catorigin="${k}" aria-pressed="${cat.origin===k}">${l}</button>`).join('');
+  const found=wines.filter(w=>(cat.kind==='all'||w.kind===cat.kind)&&(cat.origin==='all'||w.origin===cat.origin)&&(!q||[w.name,w.grape,w.region,w.notes,w.related].join(' ').toLocaleLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name));
+  $('catalogCount').textContent=`${wines.length} wine styles and regional expressions from Australia and around the world. Tap one to rate it.`;
+  $('catalogResults').innerHTML=found.length?found.slice(0,60).map(w=>`<details class="catalog-entry"><summary>${dot(w.kind)}${esc(w.name)}${rating(w.name)?` <span class="meta small">${{love:'👍',nope:'👎',want:'🔖'}[rating(w.name)]}</span>`:''}<div class="meta small">${esc(w.region)} · ${esc(w.notes)}</div></summary><p>${esc(w.about)}</p>${bars(w)}<p class="meta small">Related: ${esc(w.related)}</p>${rateRow(w.name)}</details>`).join('')+(found.length>60?`<p class="meta small">Showing 60 of ${found.length}. Search to narrow it down.</p>`:''):'<p class="empty">No matching wines. Try a grape, region or country.</p>';
+}
+
+/* ---------- tabs + events ---------- */
+function showTab(t){
+  state.tab=t;
+  for(const b of document.querySelectorAll('[data-tab]')){const on=b.dataset.tab===t;b.classList.toggle('on',on);b.setAttribute('aria-current',on?'page':'false')}
+  for(const p of document.querySelectorAll('.panel'))p.hidden=p.id!=='tab-'+t;
+  if(t==='mine')renderMine();if(t==='explore')renderCatalogue();if(t==='find')renderFind();if(t==='table')renderTable();
+  window.scrollTo({top:0});
+}
+document.addEventListener('click',e=>{
+  const el=e.target.closest('button');if(!el)return;const d=el.dataset;
+  if(d.tab)showTab(d.tab);
+  else if(d.occasion){state.occasion=d.occasion;syncControls();update()}
+  else if(d.rate){e.preventDefault();setRating(el.closest('.rate').dataset.name,d.rate)}
+  else if(d.unrate){delete store.ratings[d.unrate];save();renderMine();toast('Removed')}
+  else if(d.seg){const[i,j,v]=d.seg.split(',').map(Number);store.group.people[i].steps[j]=v;save();renderTable()}
+  else if(d.remove){store.group.people.splice(+d.remove,1);save();renderTable()}
+  else if(d.guess)guess(d.guess);
+  else if(d.catkind){cat.kind=d.catkind;renderCatalogue()}
+  else if(d.catorigin){cat.origin=d.catorigin;renderCatalogue()}
+  else if(el.id==='useTaste'||el.id==='useTaste2')applyMyTaste();
+  else if(el.id==='quizNext')newQuestion();
+  else if(el.id==='quizHint'){quiz.hint=true;renderQuiz()}
+  else if(el.id==='shareTable'){const t=tableTop.map((r,n)=>`${n+1}. ${r.w.name}`).join('\n')+(tablePair?`\nOr two bottles: ${tablePair.a.w.name} + ${tablePair.b.w.name}`:'');shareText('Wine for the table',`Bottles for the table 🍷\n${t}`,pageUrl())}
+  else if(el.id==='confirmClear'){store.ratings={};save();renderMine();renderNudge();$('clearConfirm').innerHTML='';toast('List cleared')}
+  else if(el.id==='cancelClear')$('clearConfirm').innerHTML='';
+});
+$('kind').addEventListener('change',e=>{state.kind=e.target.value;update()});
+$('food').addEventListener('change',e=>{state.food=e.target.value;update()});
+$('geekPanel').addEventListener('toggle',e=>{if(state.geek!==e.target.open){state.geek=e.target.open;update()}});
+$('surpriseBtn').addEventListener('click',()=>{if(surpriseOn)surpriseIndex++;surpriseOn=true;renderFind()});
+$('shareBtn').addEventListener('click',()=>shareText('My wine picks',`My wine picks 🍷\n${lastPicks.map(([t,w])=>`${t}: ${w.name}`).join('\n')}\nOpen the link to see them with my settings:`,pageUrl()+hashFor()));
+$('addPerson').addEventListener('click',()=>{const n=store.group.people.length+1;store.group.people.push({name:'Friend '+(n-1),steps:[1,1,0],pref:'any'});save();renderTable();$('pname-'+(n-1))?.select()});
+$('people').addEventListener('input',e=>{const i=e.target.dataset.nameI;if(i!==undefined){store.group.people[+i].name=e.target.value;save();renderTableResults()}});
+$('people').addEventListener('change',e=>{const i=e.target.dataset.prefI;if(i!==undefined){store.group.people[+i].pref=e.target.value;save();renderTableResults()}});
+$('tableFood').addEventListener('change',e=>{store.group.food=e.target.value;save();renderTableResults()});
+$('catalogSearch').addEventListener('input',renderCatalogue);
+$('shareList').addEventListener('click',()=>{
+  const part=(r,h)=>{const n=Object.entries(store.ratings).filter(([nm,v])=>v.r===r&&byName[nm]).map(([nm])=>'• '+nm);return n.length?`${h}\n${n.join('\n')}`:''};
+  const t=myTaste();const text=[`My wine list 🍷${t?`\nI lean ${t.summary}.`:''}`,part('love','Loved:'),part('want','Want to try:')].filter(Boolean).join('\n\n');
+  if(text.split('\n').length<3){toast('Rate a few wines first');return}
+  shareText('My wine list',text,pageUrl());
+});
+$('clearList').addEventListener('click',()=>{$('clearConfirm').innerHTML=`<p class="meta">Remove every rated wine? This can’t be undone.</p><div style="display:flex;gap:8px"><button class="btn inline" id="confirmClear" type="button">Yes, clear it</button><button class="btn ghost inline" id="cancelClear" type="button">Keep it</button></div>`});
+
+/* ---------- start ---------- */
+const foodOpts=Object.entries(FOOD).map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+$('food').innerHTML=foodOpts;$('tableFood').innerHTML=foodOpts;$('tableFood').value=store.group.food;
+readHash();makeSliders();syncControls();renderFind();newQuestion();
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body>
+</html>

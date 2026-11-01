@@ -6,6 +6,16 @@ Wine Mood Explorer is a free, interactive, mobile-friendly wine discovery app de
 
 Inspired by the educational approach of *Wine Folly*, it helps you explore wine based on your mood, occasion and personal taste preferences, with a particular focus on Australian wine varieties and regions.
 
+## What's new in v3
+
+- **Match scores and taste bars** on every pick, with a tick showing what you asked for
+- **For the table** – everyone sets their taste, the app finds a bottle the whole group will enjoy (or a two-bottle plan)
+- **My wines** – tap 👍 Loved it, 👎 Not for me or 🔖 Want to try; after two loved wines the app works out your style and tunes its picks
+- **Share** your picks or your list straight to a group chat; shared links open with your settings
+- **Guess the grape** – a wine-night game in the Explore tab
+- Quiet evening and Adventurous now change the picks, Tasmanian sparkling counts as Australian, three Australian rosés added, offline support (`sw.js`) and iPhone home-screen icon added
+- Dark mode throughout
+
 ## Features
 
 ### 🎭 Choose Your Mood
@@ -84,6 +94,8 @@ wine-mood-explorer/
 ├── manifest.webmanifest
 ├── icon.svg
 ├── sw.js
+├── icon-180.png
+├── icon-512.png
 └── README.md
 ```
 
@@ -92,20 +104,14 @@ wine-mood-explorer/
 | `index.html` | Main interface and recommendation engine |
 | `manifest.webmanifest` | Web app configuration |
 | `icon.svg` | App icon |
-| `sw.js` | Offline caching support |
+| `sw.js` | Offline caching support (bump `CACHE` in it when you upload a new version) |
+| `icon-180.png`, `icon-512.png` | iPhone and Android home-screen icons |
 | `README.md` | Project documentation |
 
 ## Privacy
 
-Wine Mood Explorer is designed for personal use and sharing with friends.
-
-- No user accounts
-- No database
-- No tasting history
-- No saved preferences
-- No personal information required
-
-Preferences are used during the current session and reset when the app is reopened.
+- No user accounts, no database, nothing sent anywhere
+- Your ratings and table settings are saved **on your own phone only** (browser storage) and can be cleared from the My wines tab
 
 ## Offline Use
 
